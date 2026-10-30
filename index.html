@@ -127,6 +127,17 @@
         transform: scale(var(--s)); transform-origin: 0 0;
       }
       .preview-actions { display: flex; gap: 10px; }
+      .mode-switch {
+        display: inline-flex; padding: 3px; border-radius: 999px;
+        background: #e6ebf2;
+      }
+      .mode-switch button {
+        height: 30px; min-width: 76px; padding: 0 14px; border: 0; border-radius: 999px;
+        background: transparent; font: inherit; font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+        color: var(--muted); cursor: pointer;
+      }
+      .mode-switch button[aria-selected="true"] { background: #fff; color: var(--blue); box-shadow: 0 1px 4px rgba(15, 40, 90, 0.15); }
+      .mode-switch button[data-mode="live"][aria-selected="true"] { color: #16a34a; }
       .btn {
         display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 16px;
         border-radius: 999px; border: 1px solid var(--line); background: #fff;
@@ -330,21 +341,26 @@
             <li><b>Quét mã QR</b> của Mini App</li>
           </ol>
           <div class="note">
-            Bản trải nghiệm bên cạnh chạy trên trình duyệt với dữ liệu mẫu. Các tính năng cần Zalo (đăng nhập, xin quyền vị trí,
-            số điện thoại, nhắn tin OA, chia sẻ) chỉ hoạt động đầy đủ khi mở trong ứng dụng Zalo.
+            Bản trải nghiệm bên cạnh chạy trên trình duyệt với dữ liệu mẫu. Chế độ <b>DEMO</b> giả lập các màn hình của Zalo
+            (xin quyền thông tin, số điện thoại, vị trí, nhắn tin OA, chia sẻ, quét QR). Chế độ <b>LIVE</b> gọi Zalo SDK thật –
+            các tính năng này chỉ hoạt động đầy đủ khi mở trong ứng dụng Zalo.
           </div>
         </section>
       </div>
 
       <aside class="preview">
+        <div class="mode-switch" role="tablist" aria-label="Chế độ chạy">
+          <button type="button" role="tab" data-mode="demo" title="Giả lập màn hình xin quyền, chat OA, chia sẻ... như trong Zalo">DEMO</button>
+          <button type="button" role="tab" data-mode="live" title="Gọi Zalo SDK thật – chỉ hoạt động đầy đủ khi mở trong Zalo">LIVE</button>
+        </div>
         <div class="phone">
           <div class="screen">
-            <iframe id="app-frame" src="app/index.html" title="Trải nghiệm Mini App UBND xã X"></iframe>
+            <iframe id="app-frame" title="Trải nghiệm Mini App UBND xã X"></iframe>
           </div>
         </div>
         <div class="preview-actions">
-          <button class="btn" type="button" onclick="document.getElementById('app-frame').src = 'app/index.html'">↻ Tải lại</button>
-          <a class="btn primary" href="app/index.html" target="_blank" rel="noopener">⤢ Mở toàn màn hình</a>
+          <button class="btn" type="button" id="reload-app">↻ Tải lại</button>
+          <a class="btn primary" id="open-full" target="_blank" rel="noopener">⤢ Mở toàn màn hình</a>
         </div>
       </aside>
     </main>
@@ -355,11 +371,32 @@
       // Giữ app ở kích thước iPhone 390×844 rồi thu nhỏ khung cho vừa chiều cao màn hình.
       const phone = document.querySelector(".phone");
       const fitPhone = () => {
-        const available = Math.min(window.innerHeight - 112, 920);
+        const available = Math.min(window.innerHeight - 160, 920);
         phone.style.setProperty("--s", Math.max(0.7, (available - 24) / 844).toFixed(3));
       };
       fitPhone();
       window.addEventListener("resize", fitPhone);
+
+      // DEMO giả lập các màn hình của Zalo, LIVE gọi Zalo SDK thật.
+      const frame = document.getElementById("app-frame");
+      const fullLink = document.getElementById("open-full");
+      const modeButtons = document.querySelectorAll(".mode-switch button");
+      let mode = new URLSearchParams(location.search).get("mode") === "live" ? "live" : "demo";
+      const appUrl = () => `app/index.html?mode=${mode}`;
+      const applyMode = () => {
+        modeButtons.forEach((b) => b.setAttribute("aria-selected", String(b.dataset.mode === mode)));
+        frame.src = appUrl();
+        fullLink.href = appUrl();
+      };
+      modeButtons.forEach((b) =>
+        b.addEventListener("click", () => {
+          if (b.dataset.mode === mode) return;
+          mode = b.dataset.mode;
+          applyMode();
+        }),
+      );
+      document.getElementById("reload-app").addEventListener("click", () => (frame.src = appUrl()));
+      applyMode();
     </script>
   </body>
 </html>
