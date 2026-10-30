@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UBND xã X – Cổng tương tác Chính quyền số trên Zalo</title>
+    <meta name="description" content="Trải nghiệm Zalo Mini App Cổng tương tác Chính quyền số của UBND xã X ngay trên trình duyệt." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --navy: #1e4f86;
+        --blue: #0068ff;
+        --text: #1f2a44;
+        --muted: #6b7689;
+        --line: #e6ebf2;
+        --bg: #f4f7fb;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; }
+      body {
+        font-family: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        line-height: 1.6;
+      }
+      a { color: inherit; }
+
+      .topbar {
+        position: sticky; top: 0; z-index: 10;
+        display: flex; align-items: center; justify-content: space-between;
+        height: 56px; padding: 0 32px;
+        background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .brand { display: flex; align-items: baseline; gap: 4px; text-decoration: none; }
+      .brand b { font-size: 20px; font-weight: 800; color: var(--blue); letter-spacing: -0.5px; }
+      .brand span { font-size: 14px; color: var(--blue); }
+      .topbar nav { display: flex; gap: 24px; font-size: 14px; }
+      .topbar nav a { text-decoration: none; color: var(--muted); }
+      .topbar nav a:hover { color: var(--blue); }
+
+      .layout {
+        max-width: 1240px; margin: 0 auto; padding: 32px;
+        display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: start;
+      }
+
+      .card {
+        background: #fff; border: 1px solid var(--line); border-radius: 20px;
+        padding: 28px 32px; margin-bottom: 20px;
+      }
+
+      .hero { display: flex; gap: 20px; align-items: center; }
+      .emblem {
+        width: 84px; height: 84px; flex-shrink: 0; border-radius: 20px;
+        background: #fff; border: 1px solid var(--line);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .emblem i {
+        width: 60px; height: 60px; border-radius: 50%;
+        background: #da251d; border: 4px solid #f2c94c;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .hero h1 { margin: 0; font-size: 28px; line-height: 1.25; }
+      .hero .category { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+      .tagline { margin: 20px 0 0; font-size: 16px; }
+      .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+      .chip {
+        padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 600;
+        background: #eaf2ff; color: var(--blue);
+      }
+
+      h2 { margin: 0 0 14px; font-size: 20px; }
+      h2 small { display: block; font-size: 12px; font-weight: 700; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; }
+      p { margin: 0 0 12px; }
+      .muted { color: var(--muted); }
+
+      .features { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .feature {
+        display: flex; gap: 12px; padding: 14px; border-radius: 14px;
+        border: 1px solid var(--line); background: #fbfcfe;
+      }
+      .feature .icon {
+        width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center; font-size: 20px;
+      }
+      .feature b { display: block; font-size: 15px; }
+      .feature span { display: block; font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+      .benefits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      .benefit { padding: 18px; border-radius: 14px; }
+      .benefit h3 { margin: 0 0 8px; font-size: 15px; }
+      .benefit ul { margin: 0; padding-left: 18px; font-size: 14px; }
+      .benefit li { margin: 4px 0; }
+
+      .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+      .step { position: relative; padding: 16px 14px; border-radius: 14px; background: #f6f9ff; border: 1px solid #dfe9fb; }
+      .step .month { font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; }
+      .step b { display: block; margin: 4px 0 6px; font-size: 14px; line-height: 1.35; }
+      .step span { display: block; font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+      .howto ol { margin: 0; padding-left: 20px; }
+      .howto li { margin: 6px 0; }
+      .note {
+        margin-top: 16px; padding: 12px 14px; border-radius: 12px;
+        background: #fff8e6; color: #8a5a00; font-size: 14px;
+      }
+
+      .preview { position: sticky; top: 80px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+      .phone {
+        --s: 0.85;
+        position: relative;
+        width: calc(390px * var(--s) + 24px);
+        height: calc(844px * var(--s) + 24px);
+        padding: 12px; border-radius: calc(56px * var(--s) + 12px);
+        background: #11151c;
+        box-shadow: 0 30px 60px rgba(15, 40, 90, 0.25), inset 0 0 0 2px #2b313b;
+      }
+      .phone::before {
+        content: ""; position: absolute; z-index: 2; top: 22px; left: 50%; transform: translateX(-50%);
+        width: 96px; height: 26px; border-radius: 20px; background: #11151c;
+      }
+      .screen { position: relative; width: 100%; height: 100%; border-radius: calc(56px * var(--s)); overflow: hidden; background: #fff; }
+      .screen iframe {
+        position: absolute; top: 0; left: 0; width: 390px; height: 844px; border: 0;
+        transform: scale(var(--s)); transform-origin: 0 0;
+      }
+      .preview-actions { display: flex; gap: 10px; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 16px;
+        border-radius: 999px; border: 1px solid var(--line); background: #fff;
+        font: inherit; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; text-decoration: none;
+      }
+      .btn:hover { border-color: var(--blue); color: var(--blue); }
+      .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+      .btn.primary:hover { background: #0057d6; color: #fff; }
+      .preview-hint { margin: 0; font-size: 13px; color: var(--muted); text-align: center; }
+
+      footer { padding: 24px 32px 40px; text-align: center; font-size: 13px; color: var(--muted); }
+
+      @media (max-width: 1100px) {
+        .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+      @media (max-width: 900px) {
+        .topbar { padding: 0 16px; }
+        .topbar nav { display: none; }
+        .layout { grid-template-columns: 1fr; padding: 16px; gap: 24px; }
+        .preview { position: static; order: -1; }
+        .card { padding: 20px; }
+        .features, .benefits { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 480px) {
+        .phone { display: none; }
+        .preview-hint { display: none; }
+        .steps { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#"><b>Zalo</b><span>MiniApp</span></a>
+      <nav>
+        <a href="#gioi-thieu">Giới thiệu</a>
+        <a href="#tinh-nang">Tính năng</a>
+        <a href="#loi-ich">Lợi ích</a>
+        <a href="#lo-trinh">Lộ trình</a>
+        <a href="#su-dung">Mở trên Zalo</a>
+      </nav>
+    </header>
+
+    <main class="layout">
+      <div>
+        <section class="card">
+          <div class="hero">
+            <div class="emblem">
+              <i>
+                <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m12 2.5 2.6 7.2h7.6l-6.2 4.6 2.4 7.3L12 17.1l-6.4 4.5 2.4-7.3-6.2-4.6h7.6Z" fill="#FFDD00" />
+                </svg>
+              </i>
+            </div>
+            <div>
+              <h1>UBND xã X</h1>
+              <p class="category">Hành chính công · Zalo Mini App</p>
+            </div>
+          </div>
+          <p class="tagline">
+            Cổng tương tác Chính quyền số – Kênh Mini App chính thức của UBND xã X. Người dân dùng ngay trên Zalo, không cần
+            cài thêm ứng dụng.
+          </p>
+          <div class="chips">
+            <span class="chip">Không cần cài app</span>
+            <span class="chip">Tương tác 2 chiều 24/7</span>
+            <span class="chip">Tích hợp trợ lý AI</span>
+            <span class="chip">Dữ liệu phục vụ điều hành</span>
+          </div>
+        </section>
+
+        <section class="card" id="gioi-thieu">
+          <h2><small>Giới thiệu</small>Xã thông minh trên nền tảng Zalo</h2>
+          <p>
+            Mini App giúp chính quyền xã xây dựng kênh tương tác chính thức với Nhân dân ngay trên Zalo – ứng dụng mà gần như
+            mọi người dân đều đang dùng hằng ngày. Toàn bộ quy trình tiếp nhận, xử lý và phản hồi được số hóa, minh bạch và có
+            thể theo dõi tiến độ.
+          </p>
+          <p class="muted">
+            Giải pháp cụ thể hóa chủ trương chuyển đổi số quốc gia (NQ 57-NQ/TW, QĐ 749/QĐ-TTg, Đề án 06), góp phần xây dựng
+            chính quyền cơ sở hiện đại, minh bạch, hiệu quả và đáp ứng tiêu chí “xã thông minh”.
+          </p>
+        </section>
+
+        <section class="card" id="tinh-nang">
+          <h2><small>Tính năng</small>Các chức năng nổi bật</h2>
+          <div class="features">
+            <div class="feature">
+              <span class="icon" style="background: #eaf2ff">📰</span>
+              <div><b>Truyền thông chính thống</b><span>Tin tức, thông báo hành chính, thông tin khẩn từ xã.</span></div>
+            </div>
+            <div class="feature">
+              <span class="icon" style="background: #e6f7ec">🎫</span>
+              <div><b>Lấy số thứ tự trực tuyến</b><span>Đặt lịch, lấy số, theo dõi hàng chờ tại bộ phận Một cửa.</span></div>
+            </div>
+            <div class="feature">
+              <span class="icon" style="background: #fdecec">📸</span>
+              <div><b>Phản ánh hiện trường</b><span>Gửi phản ánh kèm ảnh, vị trí; tra cứu kết quả xử lý.</span></div>
+            </div>
+            <div class="feature">
+              <span class="icon" style="background: #f1eafe">🤖</span>
+              <div><b>Trợ lý ảo AI 24/7</b><span>Hỏi đáp thủ tục hành chính mọi lúc, mọi nơi.</span></div>
+            </div>
+            <div class="feature">
+              <span class="icon" style="background: #fff3e0">🗳️</span>
+              <div><b>Khảo sát, bình chọn, góp ý</b><span>Lấy ý kiến Nhân dân nhanh chóng, minh bạch.</span></div>
+            </div>
+            <div class="feature">
+              <span class="icon" style="background: #e6f2ff">🗺️</span>
+              <div><b>Bản đồ số</b><span>Cơ quan, trường học, điểm du lịch, vùng sản xuất trên bản đồ.</span></div>
+            </div>
+            <div class="feature">
+              <span class="icon" style="background: #e6f7ec">🛍️</span>
+              <div><b>Gian hàng OCOP</b><span>Kết nối nông sản, đặc sản địa phương tới người tiêu dùng.</span></div>
+            </div>
+            <div class="feature">
+              <span class="icon" style="background: #fce7f3">🏢</span>
+              <div><b>Hỗ trợ doanh nghiệp</b><span>Đăng ký kinh doanh, vay vốn, tư vấn, tuyển dụng.</span></div>
+            </div>
+            <div class="feature">
+              <span class="icon" style="background: #eef1f6">📊</span>
+              <div><b>Tra cứu &amp; thống kê</b><span>Danh bạ cán bộ, số liệu tổng quan, sổ tay công dân.</span></div>
+            </div>
+            <div class="feature">
+              <span class="icon" style="background: #eaf2ff">💬</span>
+              <div><b>Nhắn tin với Zalo OA</b><span>Kết nối trực tiếp với kênh Zalo OA chính thức của xã.</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="loi-ich">
+          <h2><small>Lợi ích</small>Giá trị mang lại</h2>
+          <div class="benefits">
+            <div class="benefit" style="background: #f0f6ff">
+              <h3>Với người dân</h3>
+              <ul>
+                <li>Gửi phản ánh, đặt lịch mọi lúc, mọi nơi</li>
+                <li>Theo dõi tiến độ xử lý minh bạch</li>
+                <li>Nhận thông tin chính thống nhanh chóng</li>
+                <li>Được hỗ trợ 24/7 bởi trợ lý AI</li>
+              </ul>
+            </div>
+            <div class="benefit" style="background: #effaf3">
+              <h3>Với chính quyền xã</h3>
+              <ul>
+                <li>Theo dõi tình trạng xử lý theo thời gian thực</li>
+                <li>Đánh giá hiệu suất từng bộ phận</li>
+                <li>Dữ liệu phục vụ điều hành, ra quyết định</li>
+                <li>Tăng minh bạch, giảm khiếu kiện kéo dài</li>
+              </ul>
+            </div>
+            <div class="benefit" style="background: #f6f0ff">
+              <h3>Ứng dụng AI trong vận hành</h3>
+              <ul>
+                <li>Tự động phân loại phản ánh</li>
+                <li>Trả lời câu hỏi phổ biến 24/7</li>
+                <li>Tóm tắt &amp; thống kê nội dung</li>
+                <li>Giảm tải cho cán bộ</li>
+              </ul>
+            </div>
+            <div class="benefit" style="background: #fff7eb">
+              <h3>Giá trị chiến lược</h3>
+              <ul>
+                <li>Cụ thể hóa chủ trương chuyển đổi số</li>
+                <li>Hình thành chính quyền số cấp cơ sở</li>
+                <li>Nâng cao chỉ số hài lòng (SIPAS)</li>
+                <li>Xây dựng xã thông minh bền vững</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="lo-trinh">
+          <h2><small>Lộ trình</small>Triển khai trong 1–3 tháng</h2>
+          <div class="steps">
+            <div class="step">
+              <span class="month">Tháng 1</span>
+              <b>Phê duyệt &amp; chuẩn bị</b>
+              <span>Phê duyệt chủ trương, thành lập tổ công tác, khảo sát thủ tục hành chính.</span>
+            </div>
+            <div class="step">
+              <span class="month">Tháng 2</span>
+              <b>Xây dựng &amp; cấu hình</b>
+              <span>Xác thực Zalo OA, phát triển Mini App, cấu hình AI, phân quyền Web Admin.</span>
+            </div>
+            <div class="step">
+              <span class="month">Tháng 3</span>
+              <b>Đào tạo &amp; vận hành thử</b>
+              <span>Tập huấn cán bộ, ban hành quy trình, vận hành thử 30–60 ngày.</span>
+            </div>
+            <div class="step">
+              <span class="month">Tháng 4</span>
+              <b>Vận hành &amp; truyền thông</b>
+              <span>Công bố chính thức, hướng dẫn qua tổ dân phố, mã QR, tài liệu trực quan.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card howto" id="su-dung">
+          <h2><small>Sử dụng</small>Mở ứng dụng trên Zalo</h2>
+          <ol>
+            <li><b>Mở ứng dụng Zalo</b> trên điện thoại</li>
+            <li>Bấm vào <b>biểu tượng QR</b> trên thanh tìm kiếm</li>
+            <li><b>Quét mã QR</b> của Mini App</li>
+          </ol>
+          <div class="note">
+            Bản trải nghiệm bên cạnh chạy trên trình duyệt với dữ liệu mẫu. Các tính năng cần Zalo (đăng nhập, xin quyền vị trí,
+            số điện thoại, nhắn tin OA, chia sẻ) chỉ hoạt động đầy đủ khi mở trong ứng dụng Zalo.
+          </div>
+        </section>
+      </div>
+
+      <aside class="preview">
+        <div class="phone">
+          <div class="screen">
+            <iframe id="app-frame" src="app/index.html" title="Trải nghiệm Mini App UBND xã X"></iframe>
+          </div>
+        </div>
+        <div class="preview-actions">
+          <button class="btn" type="button" onclick="document.getElementById('app-frame').src = 'app/index.html'">↻ Tải lại</button>
+          <a class="btn primary" href="app/index.html" target="_blank" rel="noopener">⤢ Mở toàn màn hình</a>
+        </div>
+        <p class="preview-hint">Trải nghiệm trực tiếp – bấm vào các mục như trên điện thoại</p>
+      </aside>
+    </main>
+
+    <footer>© UBND xã X · Cổng tương tác Chính quyền số trên nền tảng Zalo Mini App</footer>
+
+    <script>
+      // Giữ app ở kích thước iPhone 390×844 rồi thu nhỏ khung cho vừa chiều cao màn hình.
+      const phone = document.querySelector(".phone");
+      const fitPhone = () => {
+        const available = Math.min(window.innerHeight - 150, 844 + 24);
+        phone.style.setProperty("--s", Math.max(0.6, (available - 24) / 844).toFixed(3));
+      };
+      fitPhone();
+      window.addEventListener("resize", fitPhone);
+    </script>
+  </body>
+</html>
