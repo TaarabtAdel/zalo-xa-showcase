@@ -42,7 +42,7 @@
       .topbar nav a:hover { color: var(--blue); }
 
       .layout {
-        max-width: 1240px; margin: 0 auto; padding: 32px;
+        max-width: 1280px; margin: 0 auto; padding: 12px 32px 32px;
         display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: start;
       }
 
@@ -107,7 +107,7 @@
         background: #fff8e6; color: #8a5a00; font-size: 14px;
       }
 
-      .preview { position: sticky; top: 80px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+      .preview { position: sticky; top: 68px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
       .phone {
         --s: 0.85;
         position: relative;
@@ -135,7 +135,6 @@
       .btn:hover { border-color: var(--blue); color: var(--blue); }
       .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
       .btn.primary:hover { background: #0057d6; color: #fff; }
-      .preview-hint { margin: 0; font-size: 13px; color: var(--muted); text-align: center; }
 
       footer { padding: 24px 32px 40px; text-align: center; font-size: 13px; color: var(--muted); }
 
@@ -152,7 +151,6 @@
       }
       @media (max-width: 480px) {
         .phone { display: none; }
-        .preview-hint { display: none; }
         .steps { grid-template-columns: 1fr; }
       }
     </style>
@@ -348,7 +346,6 @@
           <button class="btn" type="button" onclick="document.getElementById('app-frame').src = 'app/index.html'">↻ Tải lại</button>
           <a class="btn primary" href="app/index.html" target="_blank" rel="noopener">⤢ Mở toàn màn hình</a>
         </div>
-        <p class="preview-hint">Trải nghiệm trực tiếp – bấm vào các mục như trên điện thoại</p>
       </aside>
     </main>
 
@@ -358,8 +355,8 @@
       // Giữ app ở kích thước iPhone 390×844 rồi thu nhỏ khung cho vừa chiều cao màn hình.
       const phone = document.querySelector(".phone");
       const fitPhone = () => {
-        const available = Math.min(window.innerHeight - 150, 844 + 24);
-        phone.style.setProperty("--s", Math.max(0.6, (available - 24) / 844).toFixed(3));
+        const available = Math.min(window.innerHeight - 112, 920);
+        phone.style.setProperty("--s", Math.max(0.7, (available - 24) / 844).toFixed(3));
       };
       fitPhone();
       window.addEventListener("resize", fitPhone);
